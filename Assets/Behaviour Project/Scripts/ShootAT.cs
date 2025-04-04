@@ -12,6 +12,7 @@ namespace NodeCanvas.Tasks.Actions {
         public GameObject projectile;
 		[Tooltip("How far in degrees can a shot fire off target?")]
         public float shotConeWidth;
+		public Transform projectileSpawn;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -23,13 +24,17 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
+			// Create a projectile in the right location
             GameObject shot = GameObject.Instantiate(projectile);
-            shot.transform.position = agent.transform.position;
+            shot.transform.position = projectileSpawn.position;
 
+			// Set the direction of the projectile towards the target
             Vector3 directionToTarget = (target.value.position - shot.transform.position).normalized;
+			directionToTarget.y = 0;
             shot.transform.forward = directionToTarget;
-
+			// Add a random offset to the angle towards the target 
             float randomAngle = Random.Range(-shotConeWidth, shotConeWidth);
+			// Apply the rotation
 			shot.transform.Rotate(0, randomAngle, 0);
 		}
 

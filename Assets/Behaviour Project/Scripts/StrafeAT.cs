@@ -14,6 +14,7 @@ namespace NodeCanvas.Tasks.Actions {
 		public float boundaryRange;
         public Vector3 mapCenter;
 		public float rotationDirectionOffset;
+
         //Use for initialization. This is called only once in the lifetime of the task.
         //Return null if init was successfull. Return an error string otherwise
         protected override string OnInit() {
@@ -25,18 +26,22 @@ namespace NodeCanvas.Tasks.Actions {
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
 			
+			// Get the direction to the center of arena and the world direction of "left"
 			Vector3 dirToCenter = mapCenter - agent.transform.position;
 			dirToCenter = new Vector3(dirToCenter.x, 0, dirToCenter.z);
 			Vector3 left = Vector3.Cross(dirToCenter, Vector3.up);
 			
-			// Determine if we are strafing towards target or away, with room for error
+			// Determine if we are strafing towards target or away, and change direction if not within offset
 			Vector3 dirToTarget = target.value.position - agent.transform.position;
-			Debug.Log(Vector3.Dot(left.normalized, dirToTarget.normalized));
 			if (Vector3.Dot(left.normalized, dirToTarget.normalized) > rotationDirectionOffset)
 				clockwise.value = true;
             else if (Vector3.Dot(left.normalized, dirToTarget.normalized) < -rotationDirectionOffset)
 				clockwise.value = false;
 
+			// Set rotation towards the target
+			agent.transform.forward = dirToTarget;
+
+			// Add acceleration in the strafing direction
             if (clockwise.value)
 			{
 				acceleration.value -= left * steeringAcceleration * Time.deltaTime;
@@ -45,6 +50,7 @@ namespace NodeCanvas.Tasks.Actions {
 			{
 				acceleration.value += left * steeringAcceleration * Time.deltaTime;
 			}
+
 			// Remain within the boundary circle
 			if (dirToCenter.magnitude > boundaryRange)
 			{

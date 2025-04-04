@@ -24,12 +24,15 @@ namespace NodeCanvas.Tasks.Actions {
         //EndAction can be called from anywhere.
         protected override void OnExecute()
         {
+            // Get the distance to the target
             float distanceToTarget = Vector3.Distance(agent.transform.position, target.value.position);
+            // Do nothing if outside of range for avoiding target
             if (distanceToTarget > avoidRange)
             {
                 EndAction(true);
                 return;
             }
+            // Get the direction away from the target and accelerate away
             Vector3 direction = target.value.position - agent.transform.position;
             direction = new Vector3(direction.x, 0f, direction.z);
             acceleration.value -= direction.normalized * steeringAcceleration * Time.deltaTime;

@@ -1,12 +1,16 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
+using System.Threading;
+using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Actions {
 
-	public class LeapAT : ActionTask {
+	public class ChargeAT : ActionTask {
 
+		public BBParameter<float> chargeTime;
 
+		private float timer;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -18,12 +22,16 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			EndAction(true);
+			timer = 0;
 		}
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
-			
+			timer += Time.deltaTime;
+			if (timer >= chargeTime.value)
+			{
+				EndAction(true);
+			}
 		}
 
 		//Called when the task is disabled.

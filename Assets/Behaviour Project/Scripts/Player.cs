@@ -8,9 +8,6 @@ public class Player : MonoBehaviour
 {
     public float moveSpeed;
     public GameObject projectile;
-
-    public int healthMax;
-    public int health;
     public float shotCooldown;
 
     private Vector3 velocity;
@@ -50,7 +47,8 @@ public class Player : MonoBehaviour
         {
             // Create a projectile in the right location
             GameObject shot = GameObject.Instantiate(projectile);
-            shot.transform.position = transform.position;
+            Vector3 pos = transform.position;
+            shot.transform.position = pos;
             // Set the direction of the projectile towards the target
             shot.transform.forward = transform.forward;
             shotTimer = 0;

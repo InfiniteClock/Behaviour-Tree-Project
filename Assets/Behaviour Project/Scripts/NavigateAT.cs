@@ -6,9 +6,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class NavigateAT : ActionTask {
 
-		public BBParameter<Vector3> velocity;
-		public BBParameter<Vector3> acceleration;
-		public BBParameter<float> maxGroundSpeed;
+		public BBParameter<Movement> movement;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -25,17 +23,17 @@ namespace NodeCanvas.Tasks.Actions {
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
-			velocity.value += acceleration.value;
-			float groundSpeed = Mathf.Sqrt(velocity.value.x * velocity.value.x + velocity.value.z * velocity.value.z);
-			if (maxGroundSpeed.value < groundSpeed)
+            movement.value.velocity += movement.value.acceleration;
+			float groundSpeed = Mathf.Sqrt(movement.value.velocity.x * movement.value.velocity.x + movement.value.velocity.z * movement.value.velocity.z);
+			if (movement.value.maxSpeed < groundSpeed)
 			{
-				float cappedX = velocity.value.x / groundSpeed * maxGroundSpeed.value;
-				float cappedZ = velocity.value.z / groundSpeed * maxGroundSpeed.value;
-				velocity = new Vector3(cappedX, velocity.value.y, cappedZ);
+				float cappedX = movement.value.velocity.x / groundSpeed * movement.value.maxSpeed;
+				float cappedZ = movement.value.velocity.z / groundSpeed * movement.value.maxSpeed;
+                movement.value.velocity = new Vector3(cappedX, movement.value.velocity.y, cappedZ);
 			}
-			agent.transform.position += velocity.value * Time.deltaTime;
+			agent.transform.position += movement.value.velocity * Time.deltaTime;
 
-			acceleration.value = Vector3.zero;
+            movement.value.acceleration = Vector3.zero;
 		}
 
 		//Called when the task is disabled.

@@ -7,7 +7,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class StrafeAT : ActionTask {
 
-		public BBParameter<Vector3> acceleration;
+		public BBParameter<Movement> movement;
 		public BBParameter<bool> clockwise;
 		public BBParameter<Transform> target;
 		public float steeringAcceleration;
@@ -44,17 +44,17 @@ namespace NodeCanvas.Tasks.Actions {
 			// Add acceleration in the strafing direction
             if (clockwise.value)
 			{
-				acceleration.value -= left * steeringAcceleration * Time.deltaTime;
+				movement.value.acceleration -= left * steeringAcceleration * Time.deltaTime;
 			}
 			else
 			{
-				acceleration.value += left * steeringAcceleration * Time.deltaTime;
+                movement.value.acceleration += left * steeringAcceleration * Time.deltaTime;
 			}
 
 			// Remain within the boundary circle
 			if (dirToCenter.magnitude > boundaryRange)
 			{
-				acceleration.value += dirToCenter * steeringAcceleration * Time.deltaTime;
+                movement.value.acceleration += dirToCenter * steeringAcceleration * Time.deltaTime;
 			}
 			EndAction(true);
 		}

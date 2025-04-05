@@ -7,7 +7,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 	public class AvoidAT : ActionTask {
 
-        public BBParameter<Vector3> acceleration;
+        public BBParameter<Movement> movement;
         public BBParameter<Transform> target;
         public float avoidRange;
         public float steeringAcceleration;
@@ -35,7 +35,7 @@ namespace NodeCanvas.Tasks.Actions {
             // Get the direction away from the target and accelerate away
             Vector3 direction = target.value.position - agent.transform.position;
             direction = new Vector3(direction.x, 0f, direction.z);
-            acceleration.value -= direction.normalized * steeringAcceleration * Time.deltaTime;
+            movement.value.acceleration -= direction.normalized * steeringAcceleration * Time.deltaTime;
             EndAction(true);
         }
 

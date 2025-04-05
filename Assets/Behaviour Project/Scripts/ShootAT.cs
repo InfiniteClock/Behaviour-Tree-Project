@@ -26,7 +26,8 @@ namespace NodeCanvas.Tasks.Actions {
 		protected override void OnExecute() {
 			// Create a projectile in the right location
             GameObject shot = GameObject.Instantiate(projectile);
-            shot.transform.position = projectileSpawn.position;
+			Vector3 pos = projectileSpawn.position;
+            shot.transform.position = pos;
 
 			// Set the direction of the projectile towards the target
             Vector3 directionToTarget = (target.value.position - shot.transform.position).normalized;

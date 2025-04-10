@@ -13,10 +13,6 @@ public class Health : MonoBehaviour
 
     private float timer;
     private Color regularColor;
-    private void Start()
-    {
-        
-    }
     public void TakeDamage(int damage)
     {
         if (currentHealth > 0 && canTakeDamage)

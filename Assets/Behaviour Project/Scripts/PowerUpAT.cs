@@ -12,26 +12,28 @@ namespace NodeCanvas.Tasks.Actions {
 		public BBParameter<Health> health;
 		public BBParameter<int> powerLevel;
 		public BBParameter<int> maxPower;
+		public BBParameter<Color> currentColor;
+
 		public float invicibilityTime;
 		public Color powerupFlash;
 		public List<Color> powerLevels;
 
 		private float timer;
-		private Color currentColor;
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
 		protected override string OnInit() {
-			return null;
+            currentColor.value = powerLevels[powerLevel.value];
+            return null;
 		}
 
 		//This is called once each time the task is enabled.
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			// Heal the Character and power them up another stage
-			if (powerLevel.value < maxPower.value)
+            
+            // Heal the Character and power them up another stage
+            if (powerLevel.value < maxPower.value)
 			{
-				currentColor = powerLevels[powerLevel.value];
 				health.value.Restore();
 				timer = 0f;
 				StartCoroutine(PowerUp());
@@ -57,14 +59,15 @@ namespace NodeCanvas.Tasks.Actions {
                 timer += 0.1f;
                 yield return new WaitForSeconds(0.1f);
 
-                materialColor.color = currentColor;
+                materialColor.color = currentColor.value;
                 timer += 0.1f;
                 yield return new WaitForSeconds(0.1f);
             }
 			powerLevel.value++;
             materialColor.color = powerLevels[powerLevel.value];
-			// Change the character's speed as they power-up
-			movement.value.maxSpeed += movement.value.speedIncrease;		
+            currentColor.value = powerLevels[powerLevel.value];
+            // Change the character's speed as they power-up
+            movement.value.maxSpeed += movement.value.speedIncrease;		
 			EndAction(true);
         }
         //Called when the task is disabled.

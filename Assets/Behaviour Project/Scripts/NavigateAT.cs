@@ -23,6 +23,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
+			// Applies the acceleration of Movement to the character, then resets acceleration for the next frame
             movement.value.velocity += movement.value.acceleration;
 			float groundSpeed = Mathf.Sqrt(movement.value.velocity.x * movement.value.velocity.x + movement.value.velocity.z * movement.value.velocity.z);
 			if (movement.value.maxSpeed < groundSpeed)

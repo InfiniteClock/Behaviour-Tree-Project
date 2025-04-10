@@ -37,7 +37,7 @@ namespace NodeCanvas.Tasks.Actions {
 				clockwise.value = true;
             else if (Vector3.Dot(left.normalized, dirToTarget.normalized) < -rotationDirectionOffset)
 				clockwise.value = false;
-
+			dirToTarget.y = 0;
 			// Set rotation towards the target
 			agent.transform.forward = dirToTarget;
 

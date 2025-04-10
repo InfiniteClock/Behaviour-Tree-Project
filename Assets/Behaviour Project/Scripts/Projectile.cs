@@ -8,9 +8,11 @@ public class Projectile : MonoBehaviour
     public float speed;
     public float lifetime;
     public LayerMask target;
+    public LayerMask sword;
 
     private Vector3 velocity;
     private float timer = 0;
+    private bool deflected = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,7 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Set the projectile to move forwards while alive, and disappear after its lifetime is over
         if (timer < lifetime)
         {
             timer += Time.deltaTime;
@@ -32,14 +35,32 @@ public class Projectile : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        // Have to bit convert the layer to compare to layermask
         if ((1 << collision.gameObject.layer) == target.value)
         {
+            // Reduce the health of the hit target, if possible
             if (collision.gameObject.TryGetComponent<Health>(out Health hitTargetHP))
             {
                 hitTargetHP.TakeDamage(damage);
             }
         }
-        // Projectile disappears on any collision. Ensure it does not collide with spawner
-        Destroy(gameObject);
+        // Deflect off of the sword
+        if ((1 << collision.gameObject.layer) == sword.value)
+        {
+            // It deflects the projectile only if it hasn't been deflected before
+            if (!deflected)
+            {
+                Vector3 newDirection = collision.transform.position - transform.position;
+                newDirection.y = 0f;
+                velocity = -newDirection.normalized * speed*2;
+                deflected = true;
+            }
+        }
+        else
+        {
+            // Projectile disappears on any collision EXCEPT the sword
+            // Note that projectiles will not collide with layers that match their spawner
+            Destroy(gameObject);
+        }
     }
 }

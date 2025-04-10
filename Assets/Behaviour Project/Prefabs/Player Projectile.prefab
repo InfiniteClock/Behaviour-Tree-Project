@@ -152,3 +152,6 @@ MonoBehaviour:
   target:
     serializedVersion: 2
     m_Bits: 128
+  sword:
+    serializedVersion: 2
+    m_Bits: 256
